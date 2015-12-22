@@ -4,17 +4,22 @@ using System.Collections;
 public class MusicBox : MonoBehaviour {
     
     GameObject kick;
-	// Use this for initialization
+    GameObject highhat;
+
 	void Start () {
 	    kick = gameObject.transform.GetChild(0).gameObject;
+	    highhat = gameObject.transform.GetChild(1).gameObject;
 	}
 	
-	// Update is called once per frame
 	void Update () {
 	
 	}
 
     public void Kick() {
         kick.GetComponent<AudioSource>().Play();
+    }
+
+    public void HighHat() {
+        highhat.GetComponent<AudioSource>().Play();
     }
 }
