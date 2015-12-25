@@ -38,7 +38,8 @@ public class DogStateChanger : MonoBehaviour {
 
     public void OnBeat() {
         // get level stuff //
-        if(leader == level.IsLeading()) {
+        //if(leader == level.IsLeading()) {
+        if(leader && level.IsLeading()) {
             state = level.CurrentDogState();
             timeAtNewState = Time.time;
             if(state == DogState.Bark) {

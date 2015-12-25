@@ -48,11 +48,21 @@ public class LevelPlayer : MonoBehaviour {
 	}
 	
     public void OnBeat() {
+        // goes through the current level! //
         if(currentSegment < 4) {
             if(currentMove < 3) {
                 currentMove++;
             }
-            else if(currentMove == 3) {
+            else if(currentMove == 3 && leading) {
+                // goes through all the moves
+                // again, but as a non leader
+                leading = false;
+                currentMove = 0;
+            }
+            else if(currentMove == 3 && !leading) {
+                // switches back to leading mode
+                // and onto the next segment
+                leading = true;
                 currentSegment++;
                 currentMove = 0;
             }

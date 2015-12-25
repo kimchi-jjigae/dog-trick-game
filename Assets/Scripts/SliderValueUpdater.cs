@@ -14,7 +14,6 @@ public class SliderValueUpdater : MonoBehaviour {
     public void OnTimerUpdate(float beatPosPercent) {
         // set the middle point to 0.5f //
 	    float sliderValue = beatPosPercent + 0.5f;
-
         slider.value = sliderValue - Mathf.Floor(sliderValue);
     }
 }
