@@ -4,49 +4,48 @@ using System.Collections;
 
 public class Timer : MonoBehaviour {
     
-    public GameObject timerSlider;
-    Slider slider;
+    // classes the Timer sends its time updates to: //
+    public SliderValueUpdater sliderValueUpdater;
+    public ParticleController particleController;
+    public LevelPlayer levelPlayer;
 
+    // timing variables //
     public float beatsPerMinute;
     float beatLength;
-    float halfBeat;
-    float sliderValue;
+    float halfBeatLength;
     float lastBeatTime;
+    float nextBeatTime;
 
     int beatNumber;
 
-    public ParticleSystem timerParticles;
-
 	void Start () {
-        slider = timerSlider.GetComponent<Slider>();
         beatLength = 60.0f / beatsPerMinute;
-        halfBeat = 30.0f / beatsPerMinute;
-        sliderValue = 0.0f;
-        slider.maxValue = 1.0f;
+        halfBeatLength = 30.0f / beatsPerMinute;
         
         beatNumber = 0;
+        lastBeatTime = 0.0f;
+        nextBeatTime = beatLength;
 	}
 	
 	void Update () {
-        float beatPos = Time.time % beatLength;
-	    sliderValue = beatPos + halfBeat;
-        if(sliderValue > beatLength) {
-            sliderValue = sliderValue - beatLength;
-        }
+        // get beat position between 0.0f and 1.0f //
+        float timeSinceLastBeat = Time.time - lastBeatTime;
+        float predictedBeatLength = nextBeatTime - lastBeatTime;
+        float beatPosPercent = timeSinceLastBeat / predictedBeatLength;
 
-        slider.value = sliderValue;
-        // on beat //
+        sliderValueUpdater.OnTimerUpdate(beatPosPercent);
+
         if(OnBeat()) {
-            timerParticles.Emit(30);
+            particleController.OnBeat();
+            levelPlayer.OnBeat();
+
+            lastBeatTime = nextBeatTime;
+            nextBeatTime = (beatNumber + 1) * beatLength;
             beatNumber++;
-            lastBeatTime = Time.time;
         }
 	}
 
-    public bool OnBeat(float tolerance = 0.02f) {
-        float beatPos = Time.time % beatLength;
-        bool onABeat = Mathf.Abs(beatPos - beatLength) < 0.02f;
-        bool missedABeat = Time.time - lastBeatTime > beatLength;
-        return onABeat || missedABeat;
+    bool OnBeat() {
+        return Time.time > nextBeatTime;
     }
 }

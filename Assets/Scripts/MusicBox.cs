@@ -3,17 +3,8 @@ using System.Collections;
 
 public class MusicBox : MonoBehaviour {
     
-    GameObject kick;
-    GameObject highhat;
-
-	void Start () {
-	    kick = gameObject.transform.GetChild(0).gameObject;
-	    highhat = gameObject.transform.GetChild(1).gameObject;
-	}
-	
-	void Update () {
-	
-	}
+    public GameObject kick;
+    public GameObject highhat;
 
     public void Kick() {
         kick.GetComponent<AudioSource>().Play();

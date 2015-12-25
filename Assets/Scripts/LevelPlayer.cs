@@ -44,26 +44,20 @@ public class LevelPlayer : MonoBehaviour {
         leading = true;
 	}
 	
-	// Update is called once per frame
-	void Update () {
-	    if(timer.OnBeat()) {
-            if(currentSegment < 4) {
-                if(currentMove < 3) {
-                    DogState move = level[currentSegment][currentMove];
-                    musicBox.Kick();
-                    if(leading) {
-                        leader.state = move;
-                    }
-
-                    currentMove++;
-                }
-                else if(currentMove == 3) {
-                    // pause! //
-                    currentSegment++;
-                    currentMove = 0;
-                    musicBox.HighHat();
-                }
+    public void OnBeat() {
+        if(currentSegment < 4) {
+            if(currentMove < 3) {
+                DogState move = level[currentSegment][currentMove];
+                leader.state = move;
+                musicBox.Kick();
+                currentMove++;
+            }
+            else if(currentMove == 3) {
+                // pause! //
+                musicBox.HighHat();
+                currentSegment++;
+                currentMove = 0;
             }
         }
-	}
+    }
 }
