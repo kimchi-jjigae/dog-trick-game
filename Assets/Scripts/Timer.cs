@@ -8,6 +8,9 @@ public class Timer : MonoBehaviour {
     public SliderValueUpdater sliderValueUpdater;
     public ParticleController particleController;
     public LevelPlayer levelPlayer;
+    public MusicBox musicBox;
+    public DogStateChanger leader;
+    public DogStateChanger dog;
 
     // timing variables //
     public float beatsPerMinute;
@@ -28,22 +31,27 @@ public class Timer : MonoBehaviour {
 	}
 	
 	void Update () {
-        // get beat position between 0.0f and 1.0f //
-        float timeSinceLastBeat = Time.time - lastBeatTime;
-        float predictedBeatLength = nextBeatTime - lastBeatTime;
-        float beatPosPercent = timeSinceLastBeat / predictedBeatLength;
-
-        sliderValueUpdater.OnTimerUpdate(beatPosPercent);
+        sliderValueUpdater.OnTimerUpdate(BeatPosPercent());
 
         if(OnBeat()) {
             particleController.OnBeat();
             levelPlayer.OnBeat();
+            musicBox.OnBeat();
+            leader.OnBeat();
+            dog.OnBeat();
 
             lastBeatTime = nextBeatTime;
             nextBeatTime = (beatNumber + 1) * beatLength;
             beatNumber++;
         }
 	}
+
+    float BeatPosPercent() {
+        // get beat position between 0.0f and 1.0f //
+        float timeSinceLastBeat = Time.time - lastBeatTime;
+        float predictedBeatLength = nextBeatTime - lastBeatTime;
+        return timeSinceLastBeat / predictedBeatLength;
+    }
 
     bool OnBeat() {
         return Time.time > nextBeatTime;

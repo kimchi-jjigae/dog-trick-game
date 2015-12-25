@@ -3,6 +3,7 @@ using System.Collections;
 
 public class MusicBox : MonoBehaviour {
     
+    public LevelPlayer level;
     public GameObject kick;
     public GameObject highhat;
 
@@ -12,5 +13,14 @@ public class MusicBox : MonoBehaviour {
 
     public void HighHat() {
         highhat.GetComponent<AudioSource>().Play();
+    }
+
+    public void OnBeat() {
+        if(level.CurrentMoveNumber() < 3) {
+            Kick();
+        }
+        else {
+            HighHat();
+        }
     }
 }

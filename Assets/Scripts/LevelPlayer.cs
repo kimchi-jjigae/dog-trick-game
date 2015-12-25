@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 public class LevelPlayer : MonoBehaviour {
     public Timer timer;
-    public MusicBox musicBox;
     public DogStateChanger leader;
     public DogStateChanger dog;
 
@@ -20,22 +19,26 @@ public class LevelPlayer : MonoBehaviour {
             new List<DogState>{
                 DogState.Bark,
                 DogState.Bark,
-                DogState.Bark
+                DogState.Bark,
+                DogState.Idle
             },
             new List<DogState>{
                 DogState.Sit,
                 DogState.Sit,
-                DogState.Sit
+                DogState.Sit,
+                DogState.Idle
             },
             new List<DogState>{
                 DogState.Bark,
                 DogState.Sit,
-                DogState.Bark
+                DogState.Bark,
+                DogState.Idle
             },
             new List<DogState>{
                 DogState.Sit,
                 DogState.Bark,
-                DogState.Sit
+                DogState.Sit,
+                DogState.Idle
             }
         };
 
@@ -47,17 +50,24 @@ public class LevelPlayer : MonoBehaviour {
     public void OnBeat() {
         if(currentSegment < 4) {
             if(currentMove < 3) {
-                DogState move = level[currentSegment][currentMove];
-                leader.state = move;
-                musicBox.Kick();
                 currentMove++;
             }
             else if(currentMove == 3) {
-                // pause! //
-                musicBox.HighHat();
                 currentSegment++;
                 currentMove = 0;
             }
         }
+    }
+
+    public bool IsLeading() {
+        return leading;
+    }
+
+    public int CurrentMoveNumber() {
+        return currentMove;
+    }
+
+    public DogState CurrentDogState() {
+        return level[currentSegment][currentMove];
     }
 }

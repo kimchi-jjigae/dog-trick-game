@@ -9,26 +9,45 @@ public enum DogState {
 
 public class DogStateChanger : MonoBehaviour {
 
+    public LevelPlayer level;
     public DogState state;
+    public bool leader;
+    DogSoundController soundController;
     Animator animator;
-    public int stateCounterStart;
-    int stateCounter;
+    float timeAtNewState;
+    float stateDuration;
 
 	void Start () {
 	    state = DogState.Idle;
         animator = GetComponent<Animator>();
-        stateCounter = stateCounterStart;
+        soundController = GetComponent<DogSoundController>();
+        stateDuration = 0.4f; // seconds
+        timeAtNewState = 0.0f;
 	}
 	
-	void FixedUpdate () {
+	void Update() {
+        // is it time to idle again?! //
         animator.SetInteger("DogState", (int)state);
 
         if(state != DogState.Idle) {
-            stateCounter--;
-            if(stateCounter == 0) {
+            if(stateTimeOver()) {
                 state = DogState.Idle;
-                stateCounter = stateCounterStart;
             }
         }
 	}
+
+    public void OnBeat() {
+        // get level stuff //
+        if(leader == level.IsLeading()) {
+            state = level.CurrentDogState();
+            timeAtNewState = Time.time;
+            if(state == DogState.Bark) {
+                soundController.Bark();
+            }
+        }
+    }
+
+    bool stateTimeOver() {
+        return Time.time - timeAtNewState > stateDuration;
+    }
 }
