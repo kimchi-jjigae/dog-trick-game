@@ -4,9 +4,15 @@ using System.Collections;
 public class DogController : PlayerController {
     
     public override void OnBeat() {
+    }
+
+    public void StateButtonPressed(DogState buttonState) {
         if(!level.IsLeading()) {
-            //state = level.CurrentDogState();
             timeAtNewState = Time.time;
+            state = buttonState;
+            if(state == DogState.Bark) {
+                soundController.Bark();
+            }
         }
     }
 }

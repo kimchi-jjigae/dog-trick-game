@@ -4,8 +4,8 @@ using System.Collections;
 public class DogStateButton : MonoBehaviour {
     public DogController dog;
 
-    // a hack to make it appear in the script
-    // as a drop-down menu, forgive me.
+    // a hack to make it appear in the
+    // script as a drop-down menu :(
     public enum DogStateEnum {
         Idle = 0,
         Sit,
@@ -13,7 +13,7 @@ public class DogStateButton : MonoBehaviour {
     }
     public DogStateEnum targetState;
 
-    public void ChangeState() {
-        dog.state = (DogState)targetState;
+    public void StateButtonPressed() {
+        dog.StateButtonPressed((DogState)targetState);
     }
 }

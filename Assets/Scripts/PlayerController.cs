@@ -10,7 +10,7 @@ public enum DogState {
 public class PlayerController : MonoBehaviour {
 
     public LevelPlayer level;
-    public DogState state;
+    protected DogState state;
     protected DogSoundController soundController;
     Animator animator;
     protected float timeAtNewState;
@@ -36,10 +36,6 @@ public class PlayerController : MonoBehaviour {
 	}
 
     public virtual void OnBeat() {
-        if(!level.IsLeading()) {
-            //state = level.CurrentDogState();
-            timeAtNewState = Time.time;
-        }
     }
 
     bool stateTimeOver() {
