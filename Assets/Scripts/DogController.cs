@@ -2,9 +2,16 @@
 using System.Collections;
 
 public class DogController : PlayerController {
+    /* from the PlayerController
+    public LevelPlayer level;
+    protected DogState state;
+    protected DogSoundController soundController;
+    Animator animator;
+    protected float timeAtNewState;
+    float stateDuration;
+    */
     
-    public override void OnBeat() {
-    }
+    public MoveVerifier verifier;
 
     public void StateButtonPressed(DogState buttonState) {
         if(!level.IsLeading()) {
@@ -13,6 +20,8 @@ public class DogController : PlayerController {
             if(state == DogState.Bark) {
                 soundController.Bark();
             }
+
+            verifier.MovePlayed(buttonState);
         }
     }
 }

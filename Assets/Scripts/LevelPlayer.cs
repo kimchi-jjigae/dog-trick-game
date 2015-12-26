@@ -45,7 +45,7 @@ public class LevelPlayer : MonoBehaviour {
         leading = true;
 	}
 	
-    public void OnBeat() {
+    public void OnMoveChange() {
         // goes through the current level! //
         if(currentSegment < 4) {
             if(currentMove < 3) {

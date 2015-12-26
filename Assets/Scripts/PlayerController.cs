@@ -22,7 +22,12 @@ public class PlayerController : MonoBehaviour {
         soundController = GetComponent<DogSoundController>();
         stateDuration = 0.4f; // seconds
         timeAtNewState = 0.0f;
+        StartExtra();
 	}
+
+    protected virtual void StartExtra() {
+        // for definition of variables declared in inherited classes
+    }
 	
 	void Update() {
         // is it time to idle again?! //
