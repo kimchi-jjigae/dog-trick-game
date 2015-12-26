@@ -1,17 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public enum DogState {
-    Idle = 0,
-    Sit,
-    Bark
-}
-
-public class DogStateChanger : MonoBehaviour {
+public class LeaderController : MonoBehaviour {
 
     public LevelPlayer level;
     public DogState state;
-    public bool leader;
     DogSoundController soundController;
     Animator animator;
     float timeAtNewState;
@@ -37,9 +30,7 @@ public class DogStateChanger : MonoBehaviour {
 	}
 
     public void OnBeat() {
-        // get level stuff //
-        //if(leader == level.IsLeading()) {
-        if(leader && level.IsLeading()) {
+        if(level.IsLeading()) {
             state = level.CurrentDogState();
             timeAtNewState = Time.time;
             if(state == DogState.Bark) {

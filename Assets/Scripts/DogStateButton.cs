@@ -2,16 +2,18 @@
 using System.Collections;
 
 public class DogStateButton : MonoBehaviour {
-    public DogStateChanger stateChanger;
+    public DogController dog;
 
-    public enum Blapp {
+    // a hack to make it appear in the script
+    // as a drop-down menu, forgive me.
+    public enum DogStateEnum {
         Idle = 0,
         Sit,
         Bark
     }
-    public Blapp targetState;
+    public DogStateEnum targetState;
 
     public void ChangeState() {
-        stateChanger.state = (DogState)targetState;
+        dog.state = (DogState)targetState;
     }
 }

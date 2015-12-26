@@ -4,8 +4,6 @@ using System.Collections.Generic;
 
 public class LevelPlayer : MonoBehaviour {
     public Timer timer;
-    public DogStateChanger leader;
-    public DogStateChanger dog;
 
     List<List<DogState>> level;
     int levelNumber;
