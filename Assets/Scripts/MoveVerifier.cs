@@ -25,14 +25,22 @@ public class MoveVerifier : MonoBehaviour {
 
     public void OnMoveChange(float nextBeat) {
         nextBeatTime = nextBeat;
+        if(!level.IsLeading() && !movePlayed) {
+            // if there was no move played on the last move
+            success = false;
+        }
+        movePlayed = false;
     }
 
     public void MovePlayed(DogState move) {
-        bool correctState = move == level.CurrentDogState();
-        bool inTime = Mathf.Abs(Time.time - nextBeatTime) < timeThreshold;
+        if(!movePlayed) { // only one move per move!
+            movePlayed = true;
+            bool correctState = move == level.CurrentDogState();
+            bool inTime = Mathf.Abs(Time.time - nextBeatTime) < timeThreshold;
 
-        if(!correctState || !inTime) {
-            success = false;
+            if(!correctState || !inTime) {
+                success = false;
+            }
         }
     }
 }
