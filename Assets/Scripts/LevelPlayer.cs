@@ -52,8 +52,7 @@ public class LevelPlayer : MonoBehaviour {
     }
 
     List<List<DogState>> SpawnNewLevel() {
-        List<List<DogState>> newLevel = new List<List<DogState>>();
-
+        // which states are allowed to be added to the level?
         List<DogState> possibleStates = new List<DogState>();
         foreach(DogState state in System.Enum.GetValues(typeof(DogState))) {
             if(state != DogState.Idle) {
@@ -61,12 +60,17 @@ public class LevelPlayer : MonoBehaviour {
             }
         }
 
+        // create a new empty level
+        List<List<DogState>> newLevel = new List<List<DogState>>();
+        
+        // and populate it
         for(int i = 0; i < 4; ++i) {
             List<DogState> newSegment = new List<DogState>();
             for(int j = 0; j < 3; ++j) {
                 int move = Random.Range(0, possibleStates.Count);
                 newSegment.Add(possibleStates[move]);
             }
+            // the last one is always idle
             newSegment.Add(DogState.Idle);
             newLevel.Add(newSegment);
         }

@@ -15,6 +15,7 @@ public class Timer : MonoBehaviour {
 
     // timing variables //
     public float beatsPerMinute;
+    float startTime;
     float beatLength;
     float halfBeatLength;
     float lastBeatTime;
@@ -23,6 +24,7 @@ public class Timer : MonoBehaviour {
 
     int beatNumber;
     int moveNumber;
+    bool paused;
 
 	void Start () {
         beatLength = 60.0f / beatsPerMinute;
@@ -30,33 +32,34 @@ public class Timer : MonoBehaviour {
         
         beatNumber = 0; // _not_ off by one; the
         moveNumber = 0; // first beat/move is 1
-        lastBeatTime = 0.0f;
-        nextBeatTime = GetNextBeatTime();
-        nextMoveTime = GetNextMoveTime();
+
+        paused = true;
 	}
 	
 	void Update () {
-        sliderValueUpdater.OnTimerUpdate(BeatPosPercent());
+        if(!paused) {
+            sliderValueUpdater.OnTimerUpdate(BeatPosPercent());
 
-        if(OnBeat()) { // every thud
-            beatNumber++;
-            lastBeatTime = nextBeatTime;
-            nextBeatTime = GetNextBeatTime();
+            if(OnBeat()) { // every thud
+                beatNumber++;
+                lastBeatTime = nextBeatTime;
+                nextBeatTime = GetNextBeatTime();
 
-            particleController.OnBeat();
-            musicBox.OnBeat();
-            leader.OnBeat();
-            dog.OnBeat();
-        }
-        else if(OnMoveChange()) { // should be a half-beat's length before OnBeat()
-            moveNumber++;
-            nextMoveTime = GetNextMoveTime();
-
-            if(moveNumber != 1) {
-                // does not increment the first time
-                levelPlayer.OnMoveChange(); 
+                particleController.OnBeat();
+                musicBox.OnBeat();
+                leader.OnBeat();
+                dog.OnBeat();
             }
-            moveVerifier.OnMoveChange(nextBeatTime); 
+            else if(OnMoveChange()) { // should be a half-beat's length before OnBeat()
+                moveNumber++;
+                nextMoveTime = GetNextMoveTime();
+
+                if(moveNumber != 1) {
+                    // does not increment the first time
+                    levelPlayer.OnMoveChange(); 
+                }
+                moveVerifier.OnMoveChange(nextBeatTime); 
+            }
         }
 	}
 
@@ -76,10 +79,20 @@ public class Timer : MonoBehaviour {
     }
 
     float GetNextBeatTime() {
-        return (beatNumber + 1) * beatLength;
+        return startTime + (beatNumber + 1) * beatLength;
     }
 
     float GetNextMoveTime() {
-        return (moveNumber * beatLength) + halfBeatLength;
+        return startTime + (moveNumber * beatLength) + halfBeatLength;
+    }
+
+    public void TogglePause() {
+        paused = !paused;
+        if(!paused) { // unpausing
+            startTime = Time.time;
+            lastBeatTime = startTime;
+            nextBeatTime = GetNextBeatTime();
+            nextMoveTime = GetNextMoveTime();
+        }
     }
 }
