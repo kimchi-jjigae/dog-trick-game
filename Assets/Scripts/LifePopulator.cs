@@ -7,18 +7,8 @@ public class LifePopulator : MonoBehaviour {
     public RectTransform nolifePrefab;
     public float leftOffset;
     public float lifeSize;
-
-	// Use this for initialization
-	void Start () {
-	    populate(3, 0);
-	}
 	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-
-    void populate(int onAmount, int offAmount) {
+    public void Populate(int onAmount, int offAmount) {
         for(int i = 0; i < onAmount + offAmount; ++i) {
             RectTransform life;
             if(i < onAmount) {

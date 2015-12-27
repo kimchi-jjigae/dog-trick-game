@@ -4,11 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 
 public class LevelPlayer : MonoBehaviour {
-    public Timer timer;
-    public LevelNumberUpdater levelText;
 
+    public Main main;
     List<List<DogState>> level;
-    int levelNumber;
     int currentSegment;
     int currentMove;
 
@@ -22,7 +20,6 @@ public class LevelPlayer : MonoBehaviour {
         currentMove = 0;
         leading = true;
         paused = false;
-        levelNumber = 1;
 	}
 	
     public void OnMoveChange() {
@@ -49,14 +46,18 @@ public class LevelPlayer : MonoBehaviour {
                 leading = true;
                 currentMove = 0;
                 currentSegment++;
-                if(currentSegment == 4) { // new level!
-                    paused = true;
-                    timer.TogglePause();
-                    levelNumber++;
-                    levelText.UpdateLevelNumberText(levelNumber);
-                }
             }
         }
+        if(currentSegment == 4) {
+            PrepareNewLevel();
+            main.LevelEnd();
+        }
+    }
+
+    void PrepareNewLevel() {
+        paused = true;
+        currentSegment = 0;
+        level = SpawnNewLevel();
     }
 
     List<List<DogState>> SpawnNewLevel() {
