@@ -5,6 +5,7 @@ using System.Linq;
 
 public class LevelPlayer : MonoBehaviour {
     public Timer timer;
+    public LevelNumberUpdater levelText;
 
     List<List<DogState>> level;
     int levelNumber;
@@ -21,6 +22,7 @@ public class LevelPlayer : MonoBehaviour {
         currentMove = 0;
         leading = true;
         paused = false;
+        levelNumber = 1;
 	}
 	
     public void OnMoveChange() {
@@ -45,8 +47,14 @@ public class LevelPlayer : MonoBehaviour {
                 // switches back to leading mode
                 // and onto the next segment
                 leading = true;
-                currentSegment++;
                 currentMove = 0;
+                currentSegment++;
+                if(currentSegment == 4) { // new level!
+                    paused = true;
+                    timer.TogglePause();
+                    levelNumber++;
+                    levelText.UpdateLevelNumberText(levelNumber);
+                }
             }
         }
     }
