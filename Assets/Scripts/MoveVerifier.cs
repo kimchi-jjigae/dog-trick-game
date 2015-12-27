@@ -19,7 +19,6 @@ public class MoveVerifier : MonoBehaviour {
     void Update() {
         if(!success) {
             // omg failed
-            Debug.Log("FAIL!");
         }
     }
 
