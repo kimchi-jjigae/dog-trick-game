@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 public class LevelPlayer : MonoBehaviour {
     public Timer timer;
@@ -11,41 +12,24 @@ public class LevelPlayer : MonoBehaviour {
     int currentMove;
 
     bool leading;
+    bool paused;
 
 	void Start () {
-        level = new List<List<DogState>>{
-            new List<DogState>{
-                DogState.Bark,
-                DogState.Bark,
-                DogState.Bark,
-                DogState.Idle
-            },
-            new List<DogState>{
-                DogState.Sit,
-                DogState.Sit,
-                DogState.Sit,
-                DogState.Idle
-            },
-            new List<DogState>{
-                DogState.Bark,
-                DogState.Sit,
-                DogState.Bark,
-                DogState.Idle
-            },
-            new List<DogState>{
-                DogState.Sit,
-                DogState.Bark,
-                DogState.Sit,
-                DogState.Idle
-            }
-        };
+        level = SpawnNewLevel();
 
         currentSegment = 0;
         currentMove = 0;
         leading = true;
+        paused = false;
 	}
 	
     public void OnMoveChange() {
+        if(!paused) {
+            StepThroughLevel();
+        }
+    }
+
+    void StepThroughLevel() {
         // goes through the current level! //
         if(currentSegment < 4) {
             if(currentMove < 3) {
@@ -65,6 +49,28 @@ public class LevelPlayer : MonoBehaviour {
                 currentMove = 0;
             }
         }
+    }
+
+    List<List<DogState>> SpawnNewLevel() {
+        List<List<DogState>> newLevel = new List<List<DogState>>();
+
+        List<DogState> possibleStates = new List<DogState>();
+        foreach(DogState state in System.Enum.GetValues(typeof(DogState))) {
+            if(state != DogState.Idle) {
+                possibleStates.Add(state);
+            }
+        }
+
+        for(int i = 0; i < 4; ++i) {
+            List<DogState> newSegment = new List<DogState>();
+            for(int j = 0; j < 3; ++j) {
+                int move = Random.Range(0, possibleStates.Count);
+                newSegment.Add(possibleStates[move]);
+            }
+            newSegment.Add(DogState.Idle);
+            newLevel.Add(newSegment);
+        }
+        return newLevel;
     }
 
     public bool IsLeading() {

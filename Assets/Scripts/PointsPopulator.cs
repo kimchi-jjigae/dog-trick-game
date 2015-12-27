@@ -4,19 +4,29 @@ using System.Collections;
 public class PointsPopulator : MonoBehaviour {
 
     public Transform pointParent;
-    public RectTransform point;
-    public Transform point_off;
+    public RectTransform pointPrefab;
+    public RectTransform nopointPrefab;
+    public float leftOffset;
+    public float pointSize;
 
-	// Use this for initialization
 	void Start () {
-	    for(int i = 0; i < 4; ++i) {
-            RectTransform p = Instantiate(point) as RectTransform;
-            p.transform.SetParent(pointParent, false);
-            p.anchoredPosition = new Vector2(210 + (50 * i), 0);
-        }
+        populate(0, 10);
 	}
 	
-	// Update is called once per frame
 	void Update () {
 	}
+
+    void populate(int onAmount, int offAmount) {
+        for(int i = 0; i < onAmount + offAmount; ++i) {
+            RectTransform point;
+            if(i < onAmount) {
+                point = Instantiate(pointPrefab) as RectTransform;
+            }
+            else {
+                point = Instantiate(nopointPrefab) as RectTransform;
+            }
+            point.transform.SetParent(pointParent, false);
+            point.anchoredPosition = new Vector2(leftOffset + (pointSize * i), 0.0f);
+        }
+    }
 }
