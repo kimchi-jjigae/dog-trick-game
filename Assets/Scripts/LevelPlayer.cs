@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 
 public class LevelPlayer : MonoBehaviour {
 
@@ -96,5 +95,9 @@ public class LevelPlayer : MonoBehaviour {
 
     public DogState CurrentDogState() {
         return level[currentSegment][currentMove];
+    }
+
+    public void TogglePause() {
+        paused = !paused;
     }
 }

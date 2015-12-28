@@ -5,6 +5,7 @@ using System.Collections;
 public class Main : MonoBehaviour {
     
     public Timer timer;
+    public LevelPlayer level;
     public LevelNumberUpdater levelText;
     public PointsPopulator points;
     public LifePopulator life;
@@ -58,6 +59,8 @@ public class Main : MonoBehaviour {
 
     public void LevelStart() {
         levelText.UpdateLevelNumberText(levelNumber);
+        timer.TogglePause();
+        level.TogglePause();
     }
 
     public void PointsChosen() {

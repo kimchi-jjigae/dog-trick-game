@@ -89,6 +89,8 @@ public class Timer : MonoBehaviour {
     public void TogglePause() {
         paused = !paused;
         if(!paused) { // unpausing
+            beatNumber = 0;
+            moveNumber = 0;
             startTime = Time.time;
             lastBeatTime = startTime;
             nextBeatTime = GetNextBeatTime();
