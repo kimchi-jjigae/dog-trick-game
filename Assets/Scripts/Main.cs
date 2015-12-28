@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class Main : MonoBehaviour {
@@ -7,6 +8,8 @@ public class Main : MonoBehaviour {
     public LevelNumberUpdater levelText;
     public PointsPopulator points;
     public LifePopulator life;
+    public GameObject successPanel;
+    public GameObject nextLevelPanel;
 
     public int pointsStart;
     public int lifeStart;
@@ -14,6 +17,7 @@ public class Main : MonoBehaviour {
     int pointsTarget;
     int lifeAmount;
     int lifeTarget;
+    int maxLifeAmount;
 
     int levelNumber;
 
@@ -22,6 +26,7 @@ public class Main : MonoBehaviour {
         lifeAmount = lifeStart;
         pointsTarget = 10;
         lifeTarget = 0;
+        maxLifeAmount = 3;
 
         levelNumber = 1;
 
@@ -42,9 +47,30 @@ public class Main : MonoBehaviour {
     public void LevelEnd() {
         timer.TogglePause();
         levelNumber++;
+        successPanel.SetActive(true);
+        //if(lifeAmount == maxLifeAmount) { then disable the life button }
+
+        /* need to fix these and clear the old points/lives first
+        points.Populate(pointAmount, pointsTarget);
+        life.Populate(lifeAmount, lifeTarget);
+        */
     }
 
     public void LevelStart() {
         levelText.UpdateLevelNumberText(levelNumber);
+    }
+
+    public void PointsChosen() {
+        pointAmount++;
+        successPanel.SetActive(false);
+        nextLevelPanel.SetActive(true);
+        // pointsAnimation();
+    }
+
+    public void LifeChosen() {
+        lifeAmount++;
+        successPanel.SetActive(false);
+        nextLevelPanel.SetActive(true);
+        // lifeAnimation();
     }
 }
