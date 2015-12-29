@@ -37,7 +37,7 @@ public class MoveVerifier : MonoBehaviour {
 
     void Update() {
         if(!success) {
-            // omg failed
+            level.lost = true;
         }
     }
 
@@ -74,5 +74,10 @@ public class MoveVerifier : MonoBehaviour {
             gradeText.StartText(moveGrade);
 
         }
+    }
+
+    public void LevelRestart() {
+        success = true;
+        movePlayed = false;
     }
 }

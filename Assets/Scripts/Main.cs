@@ -11,6 +11,7 @@ public class Main : MonoBehaviour {
     public LifePopulator life;
     public GameObject successPanel;
     public GameObject nextLevelPanel;
+    public GameObject lifeLostPanel;
 
     public int pointsStart;
     public int lifeStart;
@@ -45,6 +46,14 @@ public class Main : MonoBehaviour {
         }
 	}
 
+    public void PauseGame() {
+        Time.timeScale = 0.0f;
+    }
+
+    public void UnpauseGame() {
+        Time.timeScale = 1.0f;
+    }
+
     public void LevelEnd() {
         timer.TogglePause();
         levelNumber++;
@@ -75,5 +84,10 @@ public class Main : MonoBehaviour {
         successPanel.SetActive(false);
         nextLevelPanel.SetActive(true);
         // lifeAnimation();
+    }
+
+    public void LifeLost() {
+        timer.TogglePause();
+        lifeLostPanel.SetActive(true);
     }
 }

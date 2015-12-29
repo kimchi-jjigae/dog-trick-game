@@ -11,6 +11,7 @@ public class LevelPlayer : MonoBehaviour {
 
     bool leading;
     bool paused;
+    public bool lost;
 
 	void Start () {
         level = SpawnNewLevel();
@@ -19,10 +20,16 @@ public class LevelPlayer : MonoBehaviour {
         currentMove = 0;
         leading = true;
         paused = false;
+        lost = false;
 	}
 	
     public void OnMoveChange() {
-        if(!paused) {
+        if(lost) {
+            main.LifeLost();
+            paused = true;
+            currentSegment = 0;
+        }
+        else if(!paused) {
             StepThroughLevel();
         }
     }

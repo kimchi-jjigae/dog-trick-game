@@ -86,6 +86,14 @@ public class Timer : MonoBehaviour {
         return startTime + (moveNumber * beatLength) + halfBeatLength;
     }
 
+    public void GamePaused() {
+        paused = true;
+    }
+
+    public void GameUnpaused() {
+        paused = false;
+    }
+
     public void TogglePause() {
         paused = !paused;
         if(!paused) { // unpausing
