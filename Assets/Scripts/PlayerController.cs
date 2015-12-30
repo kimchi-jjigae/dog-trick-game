@@ -43,7 +43,7 @@ public class PlayerController : MonoBehaviour, ITimerOnBeat {
         }
 	}
 
-    public virtual void OnBeat() {
+    public virtual void OnTimerBeat() {
     }
 
     bool stateTimeOver() {

@@ -26,16 +26,7 @@ public class Main : MonoBehaviour {
     int levelNumber;
 
 	void Start () {
-	    pointAmount = pointsStart;
-        lifeAmount = lifeStart;
-        pointsTarget = 10;
-        lifeTarget = 0;
-        maxLifeAmount = 3;
-
-        levelNumber = 1;
-
-        points.Populate(pointAmount, pointsTarget);
-        life.Populate(lifeAmount, lifeTarget);
+        InitialiseValues();
 	}
 	
 	void Update () {
@@ -57,19 +48,17 @@ public class Main : MonoBehaviour {
     }
 
     public void RestartGame() {
-        Start();
-        timer.PauseTimer();
+        InitialiseValues();
+        timer.StopTimer();
         startPanel.SetActive(true);
     }
 
-    public void StartLevel() {
-        timer.StartLevel();
-        level.StartLevel();
-        moveVerifier.StartLevel();
+    public void LevelStart() {
+        timer.StartTimer();
     }
 
     public void LevelEnd() {
-        timer.TogglePause();
+        timer.StopTimer();
         levelNumber++;
         successPanel.SetActive(true);
         //if(lifeAmount == maxLifeAmount) { then disable the life button }
@@ -95,7 +84,20 @@ public class Main : MonoBehaviour {
     }
 
     public void LifeLost() {
-        timer.PauseTimer();
+        timer.StopTimer();
         lifeLostPanel.SetActive(true);
+    }
+
+    void InitialiseValues() {
+	    pointAmount = pointsStart;
+        lifeAmount = lifeStart;
+        pointsTarget = 10;
+        lifeTarget = 0;
+        maxLifeAmount = 3;
+
+        levelNumber = 1;
+
+        points.Populate(pointAmount, pointsTarget);
+        life.Populate(lifeAmount, lifeTarget);
     }
 }

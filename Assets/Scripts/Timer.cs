@@ -4,16 +4,19 @@ using System.Collections;
 using System.Collections.Generic;
 
 public interface ITimerOnBeat {
-    void OnBeat();
+    void OnTimerBeat();
 }
 public interface ITimerOnMoveChange {
-    void OnMoveChange(int moveNumber);
-}
-public interface ITimerOnStop {
-    void OnStop();
+    void OnTimerMoveChange(int moveNumber);
 }
 public interface ITimerOnStart {
-    void OnStart();
+    void OnTimerStart();
+}
+public interface ITimerOnStop {
+    void OnTimerStop();
+}
+public interface ITimerOnUpdate {
+    void OnTimerUpdate(float beatPosPercent);
 }
 
 public class Timer : MonoBehaviour {
@@ -26,6 +29,7 @@ public class Timer : MonoBehaviour {
     List<ITimerOnMoveChange> onMoveChangeSubscribers;
     List<ITimerOnStop> onStopSubscribers;
     List<ITimerOnStart> onStartSubscribers;
+    List<ITimerOnUpdate> onUpdateSubscribers;
 
     // timing variables //
     public float beatsPerMinute;
@@ -50,11 +54,14 @@ public class Timer : MonoBehaviour {
         onMoveChangeSubscribers = new List<ITimerOnMoveChange>();
         onStartSubscribers = new List<ITimerOnStart>();
         onStopSubscribers = new List<ITimerOnStop>();
+        onUpdateSubscribers = new List<ITimerOnUpdate>();
 	}
 	
 	void Update () {
         if(!paused) {
-            sliderValueUpdater.OnTimerUpdate(BeatPosPercent());
+            foreach(ITimerOnUpdate subscriber in onUpdateSubscribers) {
+                subscriber.OnTimerUpdate(BeatPosPercent());
+            }
 
             if(OnBeat()) { // every thud
                 beatNumber++;
@@ -62,7 +69,7 @@ public class Timer : MonoBehaviour {
                 nextBeatTime = GetNextBeatTime();
 
                 foreach(ITimerOnBeat subscriber in onBeatSubscribers) {
-                    subscriber.OnBeat();
+                    subscriber.OnTimerBeat();
                 }
             }
             if(OnMoveChange()) { // should be a half-beat's length before OnBeat()
@@ -70,7 +77,7 @@ public class Timer : MonoBehaviour {
                 nextMoveTime = GetNextMoveTime();
 
                 foreach(ITimerOnMoveChange subscriber in onMoveChangeSubscribers) {
-                    subscriber.OnMoveChange(moveNumber);
+                    subscriber.OnTimerMoveChange(moveNumber);
                 }
             }
         }
@@ -99,31 +106,28 @@ public class Timer : MonoBehaviour {
         return startTime + (moveNumber * beatLength) + halfBeatLength;
     }
 
-    public void StartLevel() {
+    public void StopTimer() {
+        paused = true;
+        foreach(ITimerOnStop subscriber in onStopSubscribers) {
+            subscriber.OnTimerStop();
+        }
+    }
+
+    public void StartTimer() {
         paused = false;
-
-        beatNumber = 0; // _not_ off by one; the
-        moveNumber = 0; // first beat/move is 1
-
-        startTime = Time.time;
-        lastBeatTime = startTime;
-        nextBeatTime = GetNextBeatTime();
-        nextMoveTime = GetNextMoveTime();
+        InitialiseValues();
 
         foreach(ITimerOnStart subscriber in onStartSubscribers) {
-            subscriber.OnStart();
+            subscriber.OnTimerStart();
         }
-        sliderValueUpdater.RestartValue();
     }
 
     public void PauseTimer() {
         paused = true;
     }
 
-    public void TogglePause() {
-        paused = !paused;
-        if(!paused) { // unpausing
-        }
+    public void UnpauseTimer() {
+        paused = false;
     }
 
     public void AddSubscriber(ITimerOnBeat subscriber) {
@@ -132,5 +136,28 @@ public class Timer : MonoBehaviour {
 
     public void AddSubscriber(ITimerOnMoveChange subscriber) {
         onMoveChangeSubscribers.Add(subscriber);
+    }
+
+    public void AddSubscriber(ITimerOnStart subscriber) {
+        onStartSubscribers.Add(subscriber);
+    }
+
+    public void AddSubscriber(ITimerOnStop subscriber) {
+        onStopSubscribers.Add(subscriber);
+    }
+
+    public void AddSubscriber(ITimerOnUpdate subscriber) {
+        onUpdateSubscribers.Add(subscriber);
+    }
+
+    void InitialiseValues() {
+        beatNumber = 0;
+        moveNumber = 0;
+
+        startTime = Time.time;
+        lastBeatTime = startTime;
+        nextBeatTime = GetNextBeatTime();
+        nextMoveTime = GetNextMoveTime();
+
     }
 }

@@ -25,7 +25,7 @@ public class MusicBox : MonoBehaviour, ITimerOnBeat {
         lose.GetComponent<AudioSource>().Play();
     }
 
-    public void OnBeat() {
+    public void OnTimerBeat() {
         if(level.CurrentMoveNumber() < 3) {
             Kick();
         }

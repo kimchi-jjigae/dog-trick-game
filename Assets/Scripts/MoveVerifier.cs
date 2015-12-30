@@ -11,7 +11,7 @@ public enum MoveGrade {
     Wrong
 }
 
-public class MoveVerifier : MonoBehaviour, ITimerOnMoveChange {
+public class MoveVerifier : MonoBehaviour, ITimerOnMoveChange, ITimerOnStart {
 
     public Timer timer;
     public LevelPlayer level;
@@ -39,10 +39,11 @@ public class MoveVerifier : MonoBehaviour, ITimerOnMoveChange {
             99.00f // magic number :/
         };
 
-        timer.AddSubscriber(this);
+        timer.AddSubscriber(this as ITimerOnMoveChange);
+        timer.AddSubscriber(this as ITimerOnStart);
 	}
 
-    public void OnMoveChange(int moveNumber) {
+    public void OnTimerMoveChange(int moveNumber) {
         // don't need to process stuff if leading or if on "break" move
         if(!leading && level.CurrentMoveNumber() != 0) {
             // go through previous move stuff
@@ -87,7 +88,7 @@ public class MoveVerifier : MonoBehaviour, ITimerOnMoveChange {
         }
     }
 
-    public void StartLevel() {
+    public void OnTimerStart() {
         leading = true;
         success = true;
         movePlayed = false;

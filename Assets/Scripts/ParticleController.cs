@@ -10,7 +10,7 @@ public class ParticleController : MonoBehaviour, ITimerOnBeat {
         timer.AddSubscriber(this);
     }
 
-    public void OnBeat() {
+    public void OnTimerBeat() {
         timerParticles.Emit(30);
     }
 }

@@ -3,7 +3,7 @@ using System.Collections;
 
 public class LeaderController : PlayerController {
 
-    public override void OnBeat() {
+    public override void OnTimerBeat() {
         if(level.IsLeading()) {
             state = level.CurrentDogState();
             timeAtNewState = Time.time;
