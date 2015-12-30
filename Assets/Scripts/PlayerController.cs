@@ -7,7 +7,7 @@ public enum DogState {
     Bark
 }
 
-public class PlayerController : MonoBehaviour {
+public class PlayerController : MonoBehaviour, ITimerOnBeat {
 
     public LevelPlayer level;
     protected DogState state;
@@ -23,6 +23,9 @@ public class PlayerController : MonoBehaviour {
         stateDuration = 0.4f; // seconds
         timeAtNewState = 0.0f;
         StartExtra();
+
+        Timer timer = GameObject.Find("MainController").GetComponent<Timer>();
+        timer.AddSubscriber(this);
 	}
 
     protected virtual void StartExtra() {

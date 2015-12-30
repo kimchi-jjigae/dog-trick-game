@@ -42,7 +42,7 @@ public class MoveVerifier : MonoBehaviour {
 
     public void OnMoveChange(float beatTime) {
         // don't need to process stuff if leading or if on "break" move
-        if(!leading && level.CurrentMoveNumber() != 3) {
+        if(!leading && level.CurrentMoveNumber() != 0) {
             // go through previous move stuff
             if(!movePlayed) { 
                 success = false;
