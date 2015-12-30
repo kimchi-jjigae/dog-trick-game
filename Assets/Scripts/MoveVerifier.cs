@@ -15,6 +15,7 @@ public class MoveVerifier : MonoBehaviour {
 
     public Timer timer;
     public LevelPlayer level;
+    public MusicBox musicBox;
 
     public GradeTextController gradeText;
     MoveGrade moveGrade;
@@ -35,12 +36,13 @@ public class MoveVerifier : MonoBehaviour {
             00.08f,
             00.10f,
             00.20f,
-            99.00f // magic number
+            99.00f // magic number :/
         };
     }
 
     public void OnMoveChange(float beatTime) {
-        if(!leading) { // don't need to process stuff if leading
+        // don't need to process stuff if leading or if on "break" move
+        if(!leading && level.CurrentMoveNumber() != 3) {
             // go through previous move stuff
             if(!movePlayed) { 
                 success = false;
@@ -50,12 +52,13 @@ public class MoveVerifier : MonoBehaviour {
 
             if(!success) {
                 level.LevelLost();
+                musicBox.Lose();
             }
 
             // set up new move stuff
-            nextBeatTime = beatTime;
             movePlayed = false;
         }
+        nextBeatTime = beatTime;
         leading = level.IsLeading();
     }
 
@@ -74,7 +77,7 @@ public class MoveVerifier : MonoBehaviour {
                 }
             }
 
-            if((int)moveGrade > (int)MoveGrade.Miss) {
+            if((int)moveGrade >= (int)MoveGrade.Miss) {
                 success = false;
             }
 

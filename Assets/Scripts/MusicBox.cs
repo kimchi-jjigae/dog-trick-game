@@ -6,6 +6,7 @@ public class MusicBox : MonoBehaviour {
     public LevelPlayer level;
     public GameObject kick;
     public GameObject highhat;
+    public GameObject lose;
 
     public void Kick() {
         kick.GetComponent<AudioSource>().Play();
@@ -13,6 +14,10 @@ public class MusicBox : MonoBehaviour {
 
     public void HighHat() {
         highhat.GetComponent<AudioSource>().Play();
+    }
+
+    public void Lose() {
+        lose.GetComponent<AudioSource>().Play();
     }
 
     public void OnBeat() {
