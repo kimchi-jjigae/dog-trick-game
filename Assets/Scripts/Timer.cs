@@ -7,7 +7,7 @@ public interface ITimerOnBeat {
     void OnBeat();
 }
 public interface ITimerOnMoveChange {
-    void OnMoveChange(float nextBeatTime);
+    void OnMoveChange(int moveNumber);
 }
 public interface ITimerOnStop {
     void OnStop();
@@ -65,18 +65,13 @@ public class Timer : MonoBehaviour {
                     subscriber.OnBeat();
                 }
             }
-            else if(OnMoveChange()) { // should be a half-beat's length before OnBeat()
+            if(OnMoveChange()) { // should be a half-beat's length before OnBeat()
                 moveNumber++;
                 nextMoveTime = GetNextMoveTime();
 
                 foreach(ITimerOnMoveChange subscriber in onMoveChangeSubscribers) {
-                    subscriber.OnMoveChange(nextBeatTime);
+                    subscriber.OnMoveChange(moveNumber);
                 }
-                if(moveNumber != 1) {
-                    // does not increment the first time
-                    levelPlayer.OnMoveChange(); 
-                }
-                moveVerifier.OnMoveChange(nextBeatTime); 
             }
         }
 	}
@@ -96,7 +91,7 @@ public class Timer : MonoBehaviour {
         return Time.time > nextMoveTime;
     }
 
-    float GetNextBeatTime() {
+    public float GetNextBeatTime() {
         return startTime + (beatNumber + 1) * beatLength;
     }
 
@@ -136,7 +131,6 @@ public class Timer : MonoBehaviour {
     }
 
     public void AddSubscriber(ITimerOnMoveChange subscriber) {
-        Debug.Log("Added.");
         onMoveChangeSubscribers.Add(subscriber);
     }
 }

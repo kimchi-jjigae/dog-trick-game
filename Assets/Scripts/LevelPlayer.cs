@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class LevelPlayer : MonoBehaviour {
+public class LevelPlayer : MonoBehaviour, ITimerOnMoveChange {
 
     public Main main;
     List<List<DogState>> level;
@@ -17,13 +17,18 @@ public class LevelPlayer : MonoBehaviour {
         currentSegment = 0;
         currentMove = 0;
         leading = true;
+
+        Timer timer = GameObject.Find("MainController").GetComponent<Timer>();
+        timer.AddSubscriber(this);
 	}
 	
-    public void OnMoveChange() {
-        StepThroughLevel();
+    public void OnMoveChange(int moveNumber) {
+        if(moveNumber != 1) {
+            StepThroughLevel();
+        }
     }
 
-    void StepThroughLevel() {
+    public void StepThroughLevel() {
         // goes through the current level! //
         if(currentSegment < 4) {
             if(currentMove < 3) {
@@ -93,7 +98,6 @@ public class LevelPlayer : MonoBehaviour {
     }
 
     public void StartLevel() {
-        Start();
     }
 
     public void LevelLost() {

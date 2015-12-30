@@ -11,7 +11,7 @@ public enum MoveGrade {
     Wrong
 }
 
-public class MoveVerifier : MonoBehaviour {
+public class MoveVerifier : MonoBehaviour, ITimerOnMoveChange {
 
     public Timer timer;
     public LevelPlayer level;
@@ -38,9 +38,11 @@ public class MoveVerifier : MonoBehaviour {
             00.20f,
             99.00f // magic number :/
         };
-    }
 
-    public void OnMoveChange(float beatTime) {
+        timer.AddSubscriber(this);
+	}
+
+    public void OnMoveChange(int moveNumber) {
         // don't need to process stuff if leading or if on "break" move
         if(!leading && level.CurrentMoveNumber() != 0) {
             // go through previous move stuff
@@ -58,7 +60,7 @@ public class MoveVerifier : MonoBehaviour {
             // set up new move stuff
             movePlayed = false;
         }
-        nextBeatTime = beatTime;
+        nextBeatTime = timer.GetNextBeatTime();
         leading = level.IsLeading();
     }
 
