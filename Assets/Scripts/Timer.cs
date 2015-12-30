@@ -30,9 +30,6 @@ public class Timer : MonoBehaviour {
         beatLength = 60.0f / beatsPerMinute;
         halfBeatLength = 30.0f / beatsPerMinute;
         
-        beatNumber = 0; // _not_ off by one; the
-        moveNumber = 0; // first beat/move is 1
-
         paused = true;
 	}
 	
@@ -86,23 +83,27 @@ public class Timer : MonoBehaviour {
         return startTime + (moveNumber * beatLength) + halfBeatLength;
     }
 
-    public void GamePaused() {
-        paused = true;
+    public void StartLevel() {
+        paused = false;
+
+        beatNumber = 0; // _not_ off by one; the
+        moveNumber = 0; // first beat/move is 1
+
+        startTime = Time.time;
+        lastBeatTime = startTime;
+        nextBeatTime = GetNextBeatTime();
+        nextMoveTime = GetNextMoveTime();
+
+        sliderValueUpdater.RestartValue();
     }
 
-    public void GameUnpaused() {
-        paused = false;
+    public void PauseTimer() {
+        paused = true;
     }
 
     public void TogglePause() {
         paused = !paused;
         if(!paused) { // unpausing
-            beatNumber = 0;
-            moveNumber = 0;
-            startTime = Time.time;
-            lastBeatTime = startTime;
-            nextBeatTime = GetNextBeatTime();
-            nextMoveTime = GetNextMoveTime();
         }
     }
 }

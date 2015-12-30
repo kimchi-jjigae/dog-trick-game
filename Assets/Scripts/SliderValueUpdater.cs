@@ -16,4 +16,8 @@ public class SliderValueUpdater : MonoBehaviour {
 	    float sliderValue = beatPosPercent + 0.5f;
         slider.value = sliderValue - Mathf.Floor(sliderValue);
     }
+
+    public void RestartValue() {
+        Start();
+    }
 }

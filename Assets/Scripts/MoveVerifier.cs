@@ -15,16 +15,20 @@ public class MoveVerifier : MonoBehaviour {
 
     public Timer timer;
     public LevelPlayer level;
+
     public GradeTextController gradeText;
-    float nextBeatTime;
+    MoveGrade moveGrade;
+
     List<float> thresholdTimes;
+    float nextBeatTime;
     bool movePlayed;
     bool success;
-    MoveGrade moveGrade;
+    bool leading;
 
     void Start() {
         success = true;
         movePlayed = false;
+        leading = true;
 
         thresholdTimes = new List<float>() {
             00.05f,
@@ -35,48 +39,51 @@ public class MoveVerifier : MonoBehaviour {
         };
     }
 
-    void Update() {
-        if(!success) {
-            level.lost = true;
-        }
-    }
+    public void OnMoveChange(float beatTime) {
+        if(!leading) { // don't need to process stuff if leading
+            // go through previous move stuff
+            if(!movePlayed) { 
+                success = false;
+                moveGrade = MoveGrade.Miss;
+                gradeText.StartText(moveGrade);
+            }
 
-    public void OnMoveChange(float nextBeat) {
-        nextBeatTime = nextBeat;
-        if(!level.IsLeading() && !movePlayed && level.CurrentMoveNumber() != 0) {
-            // if there was no move played on the last move
-            success = false;
-            moveGrade = MoveGrade.Miss;
-            gradeText.StartText(moveGrade);
+            if(!success) {
+                level.LevelLost();
+            }
+
+            // set up new move stuff
+            nextBeatTime = beatTime;
+            movePlayed = false;
         }
-        movePlayed = false;
+        leading = level.IsLeading();
     }
 
     public void MovePlayed(DogState move) {
         if(!movePlayed) { // only one move per move!
             movePlayed = true;
-            float timeDifference = Mathf.Abs(Time.time - nextBeatTime);
-            moveGrade = MoveGrade.Perfect;
-            while(timeDifference > thresholdTimes[(int)moveGrade]) {
-                moveGrade++;
-            }
 
-            bool inTime = (int)moveGrade > (int)MoveGrade.Miss;
-            bool correctState = move == level.CurrentDogState();
-            if(!correctState) {
+            if(move != level.CurrentDogState()) {
                 moveGrade = MoveGrade.Wrong;
             }
+            else {
+                float timeDifference = Mathf.Abs(Time.time - nextBeatTime);
+                moveGrade = MoveGrade.Perfect;
+                while(timeDifference > thresholdTimes[(int)moveGrade]) {
+                    moveGrade++;
+                }
+            }
 
-            if(!correctState || !inTime) {
+            if((int)moveGrade > (int)MoveGrade.Miss) {
                 success = false;
             }
 
             gradeText.StartText(moveGrade);
-
         }
     }
 
-    public void LevelRestart() {
+    public void StartLevel() {
+        leading = true;
         success = true;
         movePlayed = false;
     }

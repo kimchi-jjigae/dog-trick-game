@@ -10,8 +10,6 @@ public class LevelPlayer : MonoBehaviour {
     int currentMove;
 
     bool leading;
-    bool paused;
-    public bool lost;
 
 	void Start () {
         level = SpawnNewLevel();
@@ -19,19 +17,10 @@ public class LevelPlayer : MonoBehaviour {
         currentSegment = 0;
         currentMove = 0;
         leading = true;
-        paused = false;
-        lost = false;
 	}
 	
     public void OnMoveChange() {
-        if(lost) {
-            main.LifeLost();
-            paused = true;
-            currentSegment = 0;
-        }
-        else if(!paused) {
-            StepThroughLevel();
-        }
+        StepThroughLevel();
     }
 
     void StepThroughLevel() {
@@ -61,7 +50,6 @@ public class LevelPlayer : MonoBehaviour {
     }
 
     void PrepareNewLevel() {
-        paused = true;
         currentSegment = 0;
         level = SpawnNewLevel();
     }
@@ -104,7 +92,11 @@ public class LevelPlayer : MonoBehaviour {
         return level[currentSegment][currentMove];
     }
 
-    public void TogglePause() {
-        paused = !paused;
+    public void StartLevel() {
+        Start();
+    }
+
+    public void LevelLost() {
+        main.LifeLost();
     }
 }
