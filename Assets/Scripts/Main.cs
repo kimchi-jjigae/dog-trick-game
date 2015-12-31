@@ -62,11 +62,6 @@ public class Main : MonoBehaviour {
         levelNumber++;
         successPanel.SetActive(true);
         //if(lifeAmount == maxLifeAmount) { then disable the life button }
-
-        /* need to fix these and clear the old points/lives first
-        points.Populate(pointAmount, pointsTarget);
-        life.Populate(lifeAmount, lifeTarget);
-        */
     }
 
     public void PointsChosen() {
@@ -74,6 +69,7 @@ public class Main : MonoBehaviour {
         successPanel.SetActive(false);
         nextLevelPanel.SetActive(true);
         // pointsAnimation();
+        points.Populate(pointAmount, pointsTarget - pointAmount);
     }
 
     public void LifeChosen() {
@@ -81,11 +77,15 @@ public class Main : MonoBehaviour {
         successPanel.SetActive(false);
         nextLevelPanel.SetActive(true);
         // lifeAnimation();
+        life.Populate(lifeAmount, maxLifeAmount - lifeAmount);
     }
 
     public void LifeLost() {
         timer.StopTimer();
+        // lifeLostAnimation();
+        lifeAmount--;
         lifeLostPanel.SetActive(true);
+        life.Populate(lifeAmount, maxLifeAmount - lifeAmount);
     }
 
     void InitialiseValues() {
@@ -97,7 +97,7 @@ public class Main : MonoBehaviour {
 
         levelNumber = 1;
 
-        points.Populate(pointAmount, pointsTarget);
-        life.Populate(lifeAmount, lifeTarget);
+        points.Populate(pointAmount, pointsTarget - pointAmount);
+        life.Populate(lifeAmount, maxLifeAmount - lifeAmount);
     }
 }

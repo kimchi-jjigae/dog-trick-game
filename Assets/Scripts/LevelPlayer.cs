@@ -12,11 +12,7 @@ public class LevelPlayer : MonoBehaviour, ITimerOnMoveChange, ITimerOnStart {
     bool leading;
 
 	void Start () {
-        level = SpawnNewLevel();
-
-        currentSegment = 0;
-        currentMove = 0;
-        leading = true;
+        InitialiseValues();
 
         Timer timer = GameObject.Find("MainController").GetComponent<Timer>();
         timer.AddSubscriber(this as ITimerOnMoveChange);
@@ -99,9 +95,18 @@ public class LevelPlayer : MonoBehaviour, ITimerOnMoveChange, ITimerOnStart {
     }
 
     public void OnTimerStart() {
+        InitialiseValues();
     }
 
     public void LevelLost() {
         main.LifeLost();
+    }
+
+    void InitialiseValues() {
+        level = SpawnNewLevel();
+
+        currentSegment = 0;
+        currentMove = 0;
+        leading = true;
     }
 }

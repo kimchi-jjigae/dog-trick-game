@@ -27,9 +27,7 @@ public class MoveVerifier : MonoBehaviour, ITimerOnMoveChange, ITimerOnStart {
     bool leading;
 
     void Start() {
-        success = true;
-        movePlayed = false;
-        leading = true;
+        InitialiseValues();
 
         thresholdTimes = new List<float>() {
             00.05f,
@@ -89,8 +87,12 @@ public class MoveVerifier : MonoBehaviour, ITimerOnMoveChange, ITimerOnStart {
     }
 
     public void OnTimerStart() {
-        leading = true;
+        InitialiseValues();
+    }
+
+    void InitialiseValues() {
         success = true;
+        leading = true;
         movePlayed = false;
     }
 }
