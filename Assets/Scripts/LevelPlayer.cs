@@ -46,14 +46,14 @@ public class LevelPlayer : MonoBehaviour, ITimerOnMoveChange, ITimerOnStart {
             }
         }
         if(currentSegment == 4) {
-            PrepareNewLevel();
-            main.LevelEnd();
+            LevelSuccess();
         }
     }
 
-    void PrepareNewLevel() {
+    public void LevelSuccess() {
         currentSegment = 0;
         level = SpawnNewLevel();
+        main.LevelSuccess();
     }
 
     List<List<DogState>> SpawnNewLevel() {

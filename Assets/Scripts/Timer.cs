@@ -130,6 +130,12 @@ public class Timer : MonoBehaviour {
         paused = false;
     }
 
+    public void SetBPM(float newBPM) {
+        beatsPerMinute = newBPM;
+        beatLength = 60.0f / beatsPerMinute;
+        halfBeatLength = 30.0f / beatsPerMinute;
+    }
+
     public void AddSubscriber(ITimerOnBeat subscriber) {
         onBeatSubscribers.Add(subscriber);
     }
@@ -160,4 +166,5 @@ public class Timer : MonoBehaviour {
         nextMoveTime = GetNextMoveTime();
 
     }
+
 }

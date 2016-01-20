@@ -53,13 +53,22 @@ public class Main : MonoBehaviour {
         startPanel.SetActive(true);
     }
 
-    public void LevelStart() {
+    void LevelStart() {
         timer.StartTimer();
     }
 
-    public void LevelEnd() {
+    public void NextLevelStartPressed() {
+        // nextLevelAnimation();
+        levelText.GetComponent<Text>().text = levelNumber.ToString();
+        LevelStart();
+    }
+
+    public void LevelSuccess() {
         timer.StopTimer();
         levelNumber++;
+        // a bit messy, maybe have the text component as a public variable instead:
+        nextLevelPanel.transform.GetChild(1).GetComponent<Text>().text = levelNumber.ToString();
+        timer.SetBPM(GetSpeedFromLevelNumber());
         successPanel.SetActive(true);
         //if(lifeAmount == maxLifeAmount) { then disable the life button }
     }
@@ -67,17 +76,17 @@ public class Main : MonoBehaviour {
     public void PointsChosen() {
         pointAmount++;
         successPanel.SetActive(false);
-        nextLevelPanel.SetActive(true);
         // pointsAnimation();
         points.Populate(pointAmount, pointsTarget - pointAmount);
+        nextLevelPanel.SetActive(true);
     }
 
     public void LifeChosen() {
         lifeAmount++;
         successPanel.SetActive(false);
-        nextLevelPanel.SetActive(true);
         // lifeAnimation();
         life.Populate(lifeAmount, maxLifeAmount - lifeAmount);
+        nextLevelPanel.SetActive(true);
     }
 
     public void LifeLost() {
@@ -99,5 +108,21 @@ public class Main : MonoBehaviour {
 
         points.Populate(pointAmount, pointsTarget - pointAmount);
         life.Populate(lifeAmount, maxLifeAmount - lifeAmount);
+    }
+
+    float GetSpeedFromLevelNumber() {
+        // kinda arbitrary, we'll see how it goes
+
+        int speedNumber = levelNumber % 4;
+
+        if(speedNumber == 0) {
+            speedNumber = 4;
+        }
+        if(levelNumber > 20) {
+            int additionFactor = (levelNumber - 17) / 4;
+            speedNumber += additionFactor;
+        }
+
+        return 60.0f + (20.0f * (speedNumber - 1));
     }
 }
