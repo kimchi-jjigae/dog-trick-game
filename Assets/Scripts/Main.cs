@@ -14,6 +14,8 @@ public class Main : MonoBehaviour {
     public GameObject successPanel;
     public GameObject nextLevelPanel;
     public GameObject lifeLostPanel;
+    public GameObject gameOverPanel;
+    public GameObject gameWonPanel;
 
     public int pointsStart;
     public int lifeStart;
@@ -30,13 +32,6 @@ public class Main : MonoBehaviour {
 	}
 	
 	void Update () {
-	    if(pointAmount == pointsTarget) {
-            // game won!
-        }
-
-	    if(lifeAmount == lifeTarget) {
-            // game lost!
-        }
 	}
 
     public void PauseGame() {
@@ -78,7 +73,13 @@ public class Main : MonoBehaviour {
         successPanel.SetActive(false);
         // pointsAnimation();
         points.Populate(pointAmount, pointsTarget - pointAmount);
-        nextLevelPanel.SetActive(true);
+	    if(pointAmount == pointsTarget) {
+            // game won!
+            gameWonPanel.SetActive(true);
+        }
+        else {
+            nextLevelPanel.SetActive(true);
+        }
     }
 
     public void LifeChosen() {
@@ -93,8 +94,15 @@ public class Main : MonoBehaviour {
         timer.StopTimer();
         // lifeLostAnimation();
         lifeAmount--;
-        lifeLostPanel.SetActive(true);
         life.Populate(lifeAmount, maxLifeAmount - lifeAmount);
+
+	    if(lifeAmount == lifeTarget) {
+            // game lost!
+            gameOverPanel.SetActive(true);
+        }
+        else {
+            lifeLostPanel.SetActive(true);
+        }
     }
 
     void InitialiseValues() {
