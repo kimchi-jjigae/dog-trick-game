@@ -4,31 +4,43 @@ using System.Collections.Generic;
 
 public abstract class State {
     public GameObject stateBg;
-    private int stateNumber;
+    public int stateNumber;
 
-    State(GameObject g, int s) {
+    public State(GameObject g, int s) {
         stateBg = g;
         stateNumber = s;
     }
 
-    abstract public int StateLogic();
+    public abstract int StateLogic();
 }
 
-class State_1 : State {
+public class State_1 : State {
+    public State_1(GameObject g, int s) : base(g, s) {}
+
     override public int StateLogic() {
         Debug.Log("one!");
+        if(Time.time > 5.0f) {
+            stateNumber++;
+        }
         return stateNumber;
     }
 }
 
 class State_2 : State {
+    public State_2(GameObject g, int s) : base(g, s) {}
+
     override public int StateLogic() {
         Debug.Log("two!");
+        if(Time.time > 10.0f) {
+            stateNumber++;
+        }
         return stateNumber;
     }
 }
 
 class State_3 : State {
+    public State_3(GameObject g, int s) : base(g, s) {}
+
     override public int StateLogic() {
         Debug.Log("three!");
         return stateNumber;
