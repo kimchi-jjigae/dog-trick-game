@@ -20,6 +20,7 @@ public abstract class State {
     protected float timeText2Off;
     protected float timeOff;
     protected int stringCharacters;
+    protected int fixedFrameCounter;
 
     public State(GameObject bg, GameObject p, int s) {
         stateBg = bg;
@@ -32,14 +33,14 @@ public abstract class State {
         textObject2 = panel.transform.GetChild(1).gameObject;
         pawImage    = panel.transform.GetChild(2).gameObject;
 
-        // number is duration //
-        timeText1On  = 1.0f;
-        timeText1Off = timeText1On  + 2.0f;
-        timeText2On  = timeText1Off + 1.0f;
-        timeText2Off = timeText2On  + 2.0f;
-        timeOff      = timeText2Off + 1.0f;
+        timeText1On  = 2.0f;
+        timeText1Off = timeText1On  + 7.0f;
+        timeText2On  = timeText1Off + 3.0f;
+        timeText2Off = timeText2On  + 7.0f;
+        timeOff      = timeText2Off + 3.0f;
 
         stringCharacters = 0;
+        fixedFrameCounter = 0;
     }
 
     public int StateUpdate() {
@@ -48,53 +49,57 @@ public abstract class State {
         StateLogic();
         
         float timeElapsed = Time.time - timeActivated;
+
         // in reverse order //
         if(timeElapsed > timeOff) {
             Denitialise();
         }
         else if(timeElapsed > timeText2Off) {
-            panel.SetActive(false);
-            textObject2.SetActive(false);
-            stringCharacters = 0;
+            textOff(textObject2);
         }
         else if(timeElapsed > timeText2On) {
-            if(text2 != "" && !panel.activeSelf) {
-                panel.SetActive(true);
-                textObject2.SetActive(true);
-                textObject2.GetComponent<Text>().text = text2;
-            }
-            textObject2.GetComponent<Text>().text = text2.Substring(0, stringCharacters);
-            stringCharacters++;
-            stringCharacters = Math.Min(stringCharacters, text2.Length);
+            textOn(text2, textObject2);
         }
         else if(timeElapsed > timeText1Off) {
-            panel.SetActive(false);
-            textObject1.SetActive(false);
-            stringCharacters = 0;
+            textOff(textObject1);
         }
         else if(timeElapsed > timeText1On) {
-            if(text1 != "" && !panel.activeSelf) {
-                panel.SetActive(true);
-                textObject1.SetActive(true);
-            }
-            textObject1.GetComponent<Text>().text = text1.Substring(0, stringCharacters);
-            stringCharacters++;
-            stringCharacters = Math.Min(stringCharacters, text1.Length);
+            textOn(text1, textObject1);
         }
 
         return stateNumber;
     }
 
-    public void Initialise() {
+    protected void textOn(String text, GameObject textObject) {
+        if(text != "" && !panel.activeSelf) {
+            panel.SetActive(true);
+            textObject.SetActive(true);
+            textObject.GetComponent<Text>().text = text;
+        }
+        if(fixedFrameCounter % 3 == 0) {
+            textObject.GetComponent<Text>().text = text.Substring(0, stringCharacters);
+            stringCharacters++;
+            stringCharacters = Math.Min(stringCharacters, text.Length);
+        }
+        fixedFrameCounter++;
+    }
+
+    protected void textOff(GameObject textObject) {
+        panel.SetActive(false);
+        textObject.SetActive(false);
+        stringCharacters = 0;
+    }
+
+    protected void Initialise() {
         if(!stateBg.activeSelf) {
             stateBg.SetActive(true);
             timeActivated = Time.time;
         }
     }
 
-    public abstract void StateLogic();
+    protected abstract void StateLogic();
 
-    public void Denitialise() {
+    protected void Denitialise() {
         stateNumber++;
         stateBg.SetActive(false);
     }
@@ -112,21 +117,33 @@ public abstract class State {
 public class State_1 : State {
     public State_1(GameObject bg, GameObject p, int s) : base(bg, p, s) {}
 
-    override public void StateLogic() {
+    override protected void StateLogic() {
+        stateBg.transform.localScale += new Vector3(-0.005f, -0.005f, 0.0f);
+        if(stateBg.transform.localScale.x < 1.0f) {
+            stateBg.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+        }
     }
 }
 
 class State_2 : State {
     public State_2(GameObject bg, GameObject p, int s) : base(bg, p, s) {}
 
-    override public void StateLogic() {
+    override protected void StateLogic() {
+        stateBg.transform.position += new Vector3(-0.02f, 0.0f, 0.0f);
+        if(stateBg.transform.position.x < -10.0f) {
+            stateBg.transform.localScale += new Vector3(-10.0f, 0.0f, 0.0f);
+        }
     }
 }
 
 class State_3 : State {
     public State_3(GameObject bg, GameObject p, int s) : base(bg, p, s) {}
 
-    override public void StateLogic() {
+    override protected void StateLogic() {
+        stateBg.transform.localScale += new Vector3(0.005f, 0.005f, 0.0f);
+        if(stateBg.transform.localScale.x > 5.0f) {
+            stateBg.transform.localScale = new Vector3(5.0f, 5.0f, 1.0f);
+        }
     }
 }
 
@@ -148,12 +165,12 @@ public class IntroStates : MonoBehaviour {
         State_2 state2 = new State_2(bg2, panel, 1);
         State_3 state3 = new State_3(bg3, panel, 2);
 
-        state1.SetText(2, "ONE DAY, SHERRY AND DJANGO WENT TO THE LOCAL DOG SHOW");
+        state1.SetText(2, "ONE DAY, SHERRY AND DJANGO WENT TO THE LOCAL DOG SHOW.");
 
         state2.SetText(1, "THERE WERE SO MANY DOGS THERE, OF ALL SHAPES AND SIZES...");
-        state2.SetText(2, "...COMPETING IN ALL SORTS OF COMPETITIONS");
+        state2.SetText(2, "...COMPETING IN ALL SORTS OF COMPETITIONS.");
 
-        state3.SetText(1, "ONE OF THE PRIZES IN THE CORNER CAUGHT SHERRY'S EYE");
+        state3.SetText(1, "ONE OF THE PRIZES IN THE CORNER CAUGHT SHERRY'S EYE.");
         state3.SetText(2, "\"DJANGO!\", SHERRY EXCLAIMED, \"YOU'VE GOTTA WIN THOSE FOR ME, BOY\"");
 
         states.Add(state1);
